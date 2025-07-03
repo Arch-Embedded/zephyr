@@ -36,10 +36,11 @@ rsource "../common/Kconfig.rom_loader"
 choice BOOT_DEVICE
 	prompt "Boot device"
 	default BOOT_XSPI_NOR if DT_HAS_NXP_XSPI_ENABLED
+	default BOOT_USDHC_EMMC if DT_HAS_NXP_IMX_USDHC_ENABLED
 	default BOOT_FLEXSPI_NOR
 
 config BOOT_XSPI_NOR
-	bool "XPI serial NOR"
+	bool "XSPI serial NOR"
 	depends on DT_HAS_NXP_XSPI_ENABLED
 
 config BOOT_FLEXSPI_NOR
@@ -57,6 +58,10 @@ config BOOT_SEMC_NOR
 config BOOT_SEMC_NAND
 	bool "SEMC parallel NAND"
 	depends on HAS_MCUX_SEMC
+
+config BOOT_USDHC_EMMC
+	bool "eMMC/SD card"
+	depends on HAS_MCUX_USDHC1 || HAS_MCUX_USDHC2
 
 endchoice # BOOT_DEVICE
 
@@ -90,7 +95,7 @@ endif # BOOT_XSPI_NOR
 config IMAGE_VECTOR_TABLE_OFFSET
 	hex "Image vector table offset"
 	default 0x1000 if BOOT_FLEXSPI_NOR || BOOT_SEMC_NOR
-	default 0x400 if BOOT_FLEXSPI_NAND || BOOT_SEMC_NAND
+	default 0x400 if BOOT_FLEXSPI_NAND || BOOT_SEMC_NAND || BOOT_USDHC_EMMC
 	help
 	  The Image Vector Table (IVT) provides the boot ROM with pointers to
 	  the application entry point and device configuration data. The boot
@@ -120,6 +125,7 @@ config EXTERNAL_MEM_CONFIG_OFFSET
 	depends on EXTERNAL_MEM_CONFIG_DATA
 	default 0x800 if SOC_SERIES_IMXRT118X
 	default 0x1040 if BOOT_FLEXSPI_NOR || BOOT_SEMC_NOR
+	default 0x440 if BOOT_FLEXSPI_NAND || BOOT_SEMC_NAND || BOOT_USDHC_EMMC
 	help
 	  As specified by the boot ROM, the External Memory configuration data must be
 	  placed in a specific address location to be pointed by the boot ROM.

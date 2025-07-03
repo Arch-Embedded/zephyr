@@ -11,7 +11,7 @@ __Vectors = __VECTOR_TABLE;
 
 #if defined(CONFIG_BOOT_XSPI_NOR)
 . += CONFIG_XSPI_CONFIG_BLOCK_OFFSET - (. - __rom_start_address);
-#else
+#elif defined(CONFIG_BOOT_FLEXSPI_NOR)
 . += CONFIG_FLEXSPI_CONFIG_BLOCK_OFFSET - (. - __rom_start_address);
 #endif
 #if defined(CONFIG_SOC_SERIES_IMXRT11XX) || defined(CONFIG_SOC_SERIES_IMXRT10XX) || defined(CONFIG_SOC_SERIES_IMXRT118X)
