@@ -996,6 +996,8 @@ static int imx_usdhc_init(const struct device *dev)
 	host_config.readWatermarkLevel = cfg->read_watermark;
 	host_config.writeWatermarkLevel = cfg->write_watermark;
 	USDHC_Init(base, &host_config);
+	/* Disable MMC boot if it was enabled, the bootrom might leave it set. */
+	USDHC_EnableMmcBoot(base, false);
 	/* Read host controller properties */
 	imx_usdhc_init_host_props(dev);
 	/* Set power GPIO low, so card starts powered off */
